@@ -65,7 +65,43 @@ const registerUser = asyncHandler(async (req, res) => {
         });
 });
 
-export { registerUser };
+// Function to login a user
+const loginUser = asyncHandler(async (req, res) => {
+    const { username, password } = req.body;
+
+    if(!username || !password){
+        res.status(400);
+        throw new AppError(400, "Please provide a username and password");
+    }
+
+    const user = await User.findOne({ username });
+    if(!user){
+        res.status(404);
+        throw new AppError(404, "User not found");
+    }
+
+    const isPasswordCorrect = await user.isPasswordCorrect(password);
+    if(!isPasswordCorrect){
+        res.status(401);
+        throw new AppError(401, "Incorrect password");
+    }
+
+    const { accessToken, refreshToken } = await generateTokens(user._id);
+
+    const options = {
+        httpOnly: true,
+        secure: true,
+    }
+
+    res.status(201)
+        .cookie("accessToken", accessToken, options)
+        .cookie("refreshToken", refreshToken, options)
+        .json({ 
+            message: "User logged in successfully" 
+        });
+});
+
+export { registerUser, loginUser };
 
 // Function to generate access token and refresh token
 async function generateTokens (userId) {
