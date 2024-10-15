@@ -43,12 +43,13 @@ userSchema.pre("save", async function(next) {
 });
 
 // Check if the password is correct
-userSchema.methods.isPasswordCorrect = async (plainPassword) => {
-    bcrypt.compare(plainPassword, this.password, function(err, result) {
-        if (err) throw err;
-        return result;
-    });
-}
+userSchema.methods.isPasswordCorrect = async function(plainPassword) {
+    try {
+        return await bcrypt.compare(plainPassword, this.password);
+    } catch (error) {
+        throw new Error(error);
+    }
+};
 
 // Generate access token
 userSchema.methods.generateAccessToken = function () {
