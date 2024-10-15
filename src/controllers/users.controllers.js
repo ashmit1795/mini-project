@@ -37,7 +37,6 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new AppError(409, "User already exists");
     }
 
-    console.log(password)
     const newUser = await User.create({
         username,
         email,
@@ -51,7 +50,35 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new AppError(500, "User could not be created");
     }
 
-    res.status(201).json({ message: "User created successfully" });
+    const { accessToken, refreshToken } = await generateTokens(createdUser._id);
+    
+    const options = {
+        httpOnly: true,
+        secure: true,
+    }
+
+    res.status(201)
+        .cookie("accessToken", accessToken, options)
+        .cookie("refreshToken", refreshToken, options)
+        .json({ 
+            message: "User created successfully" 
+        });
 });
 
 export { registerUser };
+
+// Function to generate access token and refresh token
+async function generateTokens (userId) {
+    const user = await User.findById(userId);
+    if(!user){
+        res.status(404);
+        throw new AppError(404, "User not found");
+    }
+    const accessToken = user.generateAccessToken();
+    const refreshToken = user.generateRefreshToken();
+
+    user.refreshToken = refreshToken;
+    await user.save({ validateBeforeSave: false });
+
+    return { accessToken, refreshToken };
+}
