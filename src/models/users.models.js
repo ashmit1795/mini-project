@@ -22,7 +22,11 @@ const userSchema = new Schema({
     age: {
         type: Number,
         required: true
-    }
+    },
+    posts: [{
+        type: Schema.Types.ObjectId,
+        ref: "Post"
+    }],
 }, { timestamps: true });
 
 // Hash the password before saving the user
