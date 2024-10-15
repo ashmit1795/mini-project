@@ -23,5 +23,7 @@ app.use(express.static('public'));
 app.set('view engine', 'ejs');
 
 // Import routes
+import userRouter from "./routes/users.routes.js"
 
 // Use routes
+app.use("/app/users", userRouter);
