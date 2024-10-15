@@ -26,15 +26,12 @@ const userSchema = new Schema({
 }, { timestamps: true });
 
 // Hash the password before saving the user
-userSchema.pre('save', async (next) => {
-    if(this.isModified("password")){
-        await bcrypt.hash(this.password, 10, function(err, hash) {
-            if (err) throw err;
-            this.password = hash;
-        });
+userSchema.pre("save", async function(next) {
+    if(this.isModified("password")) {
+        this.password = await bcrypt.hash(this.password, 10);
     }
     next();
-})
+});
 
 // Check if the password is correct
 userSchema.methods.isPasswordCorrect = async (plainPassword) => {
