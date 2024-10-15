@@ -13,7 +13,7 @@ export const protect = AsyncHandler(async (req, res, next) => {
     }
 
     const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    const user = await User.findById(decodedToken.id).select("-password", "-refreshToken");
+    const user = await User.findById(decodedToken.id).select("-password -refreshToken");
     if(!user){
         res.status(401);
         throw new AppError(401, "Unauthorized");
