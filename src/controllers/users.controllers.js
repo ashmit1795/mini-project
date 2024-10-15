@@ -101,7 +101,27 @@ const loginUser = asyncHandler(async (req, res) => {
         });
 });
 
-export { registerUser, loginUser };
+// Function to logout a user
+const logoutUser = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.user._id);
+    if(!user){
+        res.status(404);
+        throw new AppError(404, "User not found");
+    }
+
+    user.refreshToken = null;
+    await user.save({ validateBeforeSave: false });
+
+    res.status(200)
+        .clearCookie("accessToken")
+        .clearCookie("refreshToken")
+        .json({ 
+            message: "User logged out successfully" 
+        })
+        .redirect("/login");
+});
+
+export { registerUser, loginUser, logoutUser };
 
 // Function to generate access token and refresh token
 async function generateTokens (userId) {

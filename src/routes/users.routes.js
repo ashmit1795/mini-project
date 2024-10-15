@@ -1,5 +1,6 @@
 import { Router } from "express";
-import { loginUser, registerUser } from "../controllers/users.controllers.js";
+import { loginUser, logoutUser, registerUser } from "../controllers/users.controllers.js";
+import { protect } from "../middlewares/auth.middlewares.js";
 
 const router = Router();
 
@@ -14,5 +15,7 @@ router.route("/login").get(
         res.render("login");
     }
 ).post(loginUser);
+
+router.route("/logout").get(protect, logoutUser);
 
 export default router;
