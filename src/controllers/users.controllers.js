@@ -121,7 +121,20 @@ const logoutUser = asyncHandler(async (req, res) => {
         .redirect("/login");
 });
 
-export { registerUser, loginUser, logoutUser };
+// Function to get the user's profile
+const getUserProfile = async (req, res) =>{
+    
+    const user = await User.findById(req.user._id);
+    if(!user){
+        res.status(404);
+        throw new AppError(404, "User not found");
+    }
+
+    return user;
+
+}
+
+export { registerUser, loginUser, logoutUser, getUserProfile };
 
 // Function to generate access token and refresh token
 async function generateTokens (userId) {
