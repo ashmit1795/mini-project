@@ -24,6 +24,8 @@ app.set('view engine', 'ejs');
 
 // Import routes
 import userRouter from "./routes/users.routes.js"
+import postRouter from "./routes/posts.routes.js"
 
 // Use routes
 app.use("/app/users", userRouter);
+app.use("/app/posts", postRouter);
