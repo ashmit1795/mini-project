@@ -60,9 +60,7 @@ const registerUser = asyncHandler(async (req, res) => {
     res.status(201)
         .cookie("accessToken", accessToken, options)
         .cookie("refreshToken", refreshToken, options)
-        .json({ 
-            message: "User created successfully" 
-        });
+        .redirect("/app/users/profile");
 });
 
 // Function to login a user
@@ -96,9 +94,7 @@ const loginUser = asyncHandler(async (req, res) => {
     res.status(201)
         .cookie("accessToken", accessToken, options)
         .cookie("refreshToken", refreshToken, options)
-        .json({ 
-            message: "User logged in successfully" 
-        });
+        .redirect("/app/users/profile");
 });
 
 // Function to logout a user
@@ -115,10 +111,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     res.status(200)
         .clearCookie("accessToken")
         .clearCookie("refreshToken")
-        .json({ 
-            message: "User logged out successfully" 
-        })
-        .redirect("/login");
+        .redirect("/app/users/login");
 });
 
 // Function to get the user's profile
