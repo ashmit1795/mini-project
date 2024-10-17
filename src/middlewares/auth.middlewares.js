@@ -5,11 +5,11 @@ import AsyncHandler from "../utils/AsyncHandler.js";
 
 // Function to protect routes
 export const protect = AsyncHandler(async (req, res, next) => {
-    let token = req.cookies?.accessToken || req.headers?.authorization.split(" ")[1];
+    let token = req.cookies?.accessToken || req.headers["authorization"]?.replace("Bearer ", "");
 
     if(!token){
         res.status(401);
-        throw new AppError(401, "Unauthorized");
+        throw new AppError(401, "You are Unauthorized");
     }
 
     const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
