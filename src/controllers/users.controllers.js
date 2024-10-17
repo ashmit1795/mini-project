@@ -117,7 +117,7 @@ const logoutUser = asyncHandler(async (req, res) => {
 // Function to get the user's profile
 const getUserProfile = async (req, res) =>{
     
-    const user = await User.findById(req.user._id);
+    const user = await User.findById(req.user._id).populate("posts");
     if(!user){
         res.status(404);
         throw new AppError(404, "User not found");
