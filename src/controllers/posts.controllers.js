@@ -29,5 +29,28 @@ const createPost = asyncHandler(async (req, res) => {
         .redirect("/app/users/profile");
 });
 
-export { createPost };
+// Function to toggle like on a post
+const toggleLike = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.user._id);
+    const { postId } = req.params;
+    const post = await Post.findById(postId);
+    if(!post){
+        res.status(404);
+        throw new AppError(404, "Post not found");
+    }
+
+    const isLiked = post.likes.includes(user._id);
+    if(!isLiked){
+        post.likes.push(user._id);
+        post.save({ validateBeforeSave: false });
+    } else {
+        post.likes.pull(user._id);
+        post.save({ validateBeforeSave: false });
+    }
+
+    res.status(201)
+        .redirect("/app/users/profile");
+});
+
+export { createPost, toggleLike };
 
