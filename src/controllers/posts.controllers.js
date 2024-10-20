@@ -52,5 +52,35 @@ const toggleLike = asyncHandler(async (req, res) => {
         .redirect("/app/users/profile");
 });
 
-export { createPost, toggleLike };
+// Function to get a post
+const getPost = async (req, res) => {
+    const { postId } = req.params;
+    const post = await Post.findById(postId);
+    if(!post){
+        res.status(404);
+        throw new AppError(404, "Post not found");
+    }
+
+    return post;
+}
+
+// Function to edit a post
+const editPost = asyncHandler(async (req, res) => {
+    const { postId } = req.params;
+    const { updatedContent } = req.body;
+    if(!updatedContent.trim()){
+        res.status(400);
+        throw new AppError(400, "Please provide some content");
+    }
+
+    const post = await Post.findById(postId);
+
+    post.content = updatedContent;
+    await post.save({ validateBeforeSave: false });
+
+    res.status(201)
+        .redirect("/app/users/profile");
+});
+
+export { createPost, toggleLike, getPost, editPost };
 
