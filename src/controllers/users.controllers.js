@@ -91,10 +91,12 @@ const loginUser = asyncHandler(async (req, res) => {
         secure: true,
     }
 
+    const redirectUrl = req.query.redirect || "/app/posts/home";
+
     res.status(201)
         .cookie("accessToken", accessToken, options)
         .cookie("refreshToken", refreshToken, options)
-        .redirect("/app/users/profile");
+        .redirect(redirectUrl);
 });
 
 // Function to logout a user
