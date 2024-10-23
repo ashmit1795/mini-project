@@ -5,10 +5,8 @@ import { optionalAuth } from "../middlewares/optionalAuth.middlewares.js";
 
 const router = Router();
 
-router.route("/home")
-        .get(optionalAuth, getAllPosts)
-        .post(protect, createPost);
-
+router.route("/home").get(optionalAuth, getAllPosts);
+router.route("/").post(protect, createPost);
 router.route("/like/:postId").get(protect, toggleLike);
 router.route("/edit/:postId").get(protect, async (req, res) => {
     res.render("edit", { 
