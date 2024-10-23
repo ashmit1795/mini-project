@@ -16,15 +16,14 @@ export const protect = AsyncHandler(async (req, res, next) => {
         const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
         const user = await User.findById(decodedToken.id).select("-password -refreshToken");
         if(!user){
-            res.status(401);
-            throw new AppError(401, "Unauthorized");
+            res.redirect(`/app/users/login?redirect=${req.originalUrl}`);
         }
 
         req.user = user;
         next();
     } catch (error) {
         console.log(error.message);
-        res.redirect("/app/users/login");
+        res.redirect(`/app/users/login?redirect=${req.originalUrl}`);
     }
 });
 
