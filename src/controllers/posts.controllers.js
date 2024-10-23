@@ -49,7 +49,7 @@ const toggleLike = asyncHandler(async (req, res) => {
     }
 
     res.status(201)
-        .redirect("/app/users/profile");
+        .redirect("/app/posts/home");
 });
 
 // Function to get a post
@@ -82,5 +82,19 @@ const editPost = asyncHandler(async (req, res) => {
         .redirect("/app/users/profile");
 });
 
-export { createPost, toggleLike, getPost, editPost };
+// Function to get all posts
+const getAllPosts = async(req, res) => {
+    const posts = await Post.find().populate("owner");
+    if(!posts){
+        res.status(404);
+        throw new AppError(404, "No posts found");
+    }
+
+    res.status(201).render("home", { 
+        posts: posts,
+        user: req.user
+    });
+}
+
+export { createPost, toggleLike, getPost, editPost, getAllPosts };
 
