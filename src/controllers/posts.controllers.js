@@ -47,8 +47,10 @@ const toggleLike = asyncHandler(async (req, res) => {
         post.save({ validateBeforeSave: false });
     }
 
+    const redirectUrl = req.query.redirect || "/app/posts/home";
+
     req.flash("success_msg", isLiked ? "Like removed" : "Post liked");
-    return res.status(201).redirect("/app/posts/home");
+    return res.status(201).redirect(redirectUrl);
 });
 
 // Function to get a post
