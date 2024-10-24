@@ -85,7 +85,7 @@ const editPost = asyncHandler(async (req, res) => {
 
 // Function to get all posts
 const getAllPosts = async(req, res) => {
-    const posts = await Post.find().populate("owner");
+    const posts = (await Post.find().populate("owner")).reverse();
     if(!posts){
         req.flash("error_msg", "No posts found");
         return res.status(404).redirect("/app/posts/home");
