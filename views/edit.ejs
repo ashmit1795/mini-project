@@ -8,6 +8,17 @@
 </head>
 <body>
     <div class="w-full min-h-screen bg-zinc-900 text-white p-10">
+        <% if (success_msg) { %>  <!-- Check if success message exists -->
+            <div class="bg-green-500 text-white px-4 py-2 rounded-md mb-4">
+                <%= success_msg %>  <!-- Display success message -->
+            </div>
+        <% } %>
+        
+        <% if (error_msg) { %>  <!-- Check if error message exists -->
+            <div class="bg-red-500 text-white px-4 py-2 rounded-md mb-4">
+                <%= error_msg %>  <!-- Display error message -->
+            </div>
+        <% } %>
         <div class="w-full flex justify-start">
             <a class="text-blue-500 py-2 text-sm mb-5 inline-block" href="/app/users/profile">Go back to profile</a>
         </div>
