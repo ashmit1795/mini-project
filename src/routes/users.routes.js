@@ -17,12 +17,6 @@ router.route("/login").get(
 ).post(loginUser);
 
 router.route("/logout").get(protect, logoutUser);
-router.route("/profile").get(
-    protect,
-    async (req,res) => {
-        const user = await getUserProfile(req, res);
-        res.render("profile", { user });
-    }
-)
+router.route("/profile").get(protect, getUserProfile)
 
 export default router;
