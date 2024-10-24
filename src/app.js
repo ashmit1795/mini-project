@@ -24,7 +24,7 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     cookie: {
-        secure: true,
+        secure: false,
         maxAge: 1000 * 60 * 15, // Session expiry (15 minutes)
     }
 }));
@@ -34,9 +34,9 @@ app.use(flash());
 
 // Pass flash messages to all views
 app.use((req, res, next) => {
-    res.locals.success_msg = req.flash('success_msg');
-    res.locals.error_msg = req.flash('error_msg');
-    res.locals.error = req.flash('error'); // For passport.js or general errors
+    res.locals.success_msg = req.flash('success_msg')[0] || null;
+    res.locals.error_msg = req.flash('error_msg')[0] || null;
+    res.locals.error = req.flash('error')[0] || null; // For passport.js or general errors
     next();
 });
 
