@@ -114,15 +114,15 @@ const logoutUser = asyncHandler(async (req, res) => {
 });
 
 // Function to get the user's profile
-const getUserProfile = async (req, res) => {
+const getUserProfile = asyncHandler(async (req, res) => {
     const user = await User.findById(req.user._id).populate("posts");
     if (!user) {
         req.flash("error_msg", "User not found");
         return res.status(404).redirect("/app/users/login");
     }
 
-    return user;
-};
+    return res.render("profile", { user });
+});
 
 export { registerUser, loginUser, logoutUser, getUserProfile };
 
