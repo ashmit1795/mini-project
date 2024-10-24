@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import asyncHandler from "../utils/AsyncHandler.js";
 import { User } from "../models/users.models.js";
 import AppError from "../utils/AppError.js";
+import { Post } from "../models/posts.model.js";
 
 // Function to register a new user
 const registerUser = asyncHandler(async (req, res) => {
@@ -121,7 +122,10 @@ const getUserProfile = asyncHandler(async (req, res) => {
         return res.status(404).redirect("/app/users/login");
     }
 
-    return res.render("profile", { user });
+    // Get liked posts
+    const likedPosts = await Post.find({ likes: { $in: [user._id] } });
+
+    return res.render("profile", { user, likedPosts });
 });
 
 export { registerUser, loginUser, logoutUser, getUserProfile };
