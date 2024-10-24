@@ -8,8 +8,8 @@ const createPost = asyncHandler(async (req, res) => {
     const { content } = req.body;
     const user = await User.findById(req.user._id);
     if(!content.trim()){
-        res.status(400);
-        throw new AppError(400, "Please provide some content");
+        req.flash("error_msg", "Please provide some content");
+        return res.status(400).redirect("/app/users/profile");
     }
 
     const newPost = await Post.create({
@@ -17,16 +17,15 @@ const createPost = asyncHandler(async (req, res) => {
         owner: user._id
     });
     if(!newPost){
-        res.status(500);
-        throw new AppError(500, "Post could not be created");
+        req.flash("error_msg", "Post could not be created");
+        return res.status(500).redirect("/app/users/profile");
     }
 
     user.posts.push(newPost._id);
     await user.save({ validateBeforeSave: false });
-    console.log(user);
 
-    res.status(201)
-        .redirect("/app/users/profile");
+    req.flash("success_msg", "Post created successfully");
+    return res.status(201).redirect("/app/users/profile");
 });
 
 // Function to toggle like on a post
@@ -35,8 +34,8 @@ const toggleLike = asyncHandler(async (req, res) => {
     const { postId } = req.params;
     const post = await Post.findById(postId);
     if(!post){
-        res.status(404);
-        throw new AppError(404, "Post not found");
+        req.flash("error_msg", "Post not found");
+        return res.status(404).redirect("/app/posts/home");
     }
 
     const isLiked = post.likes.includes(user._id);
@@ -48,8 +47,8 @@ const toggleLike = asyncHandler(async (req, res) => {
         post.save({ validateBeforeSave: false });
     }
 
-    res.status(201)
-        .redirect("/app/posts/home");
+    req.flash("success_msg", isLiked ? "Like removed" : "Post liked");
+    return res.status(201).redirect("/app/posts/home");
 });
 
 // Function to get a post
@@ -69,8 +68,8 @@ const editPost = asyncHandler(async (req, res) => {
     const { postId } = req.params;
     const { updatedContent } = req.body;
     if(!updatedContent.trim()){
-        res.status(400);
-        throw new AppError(400, "Please provide some content");
+        req.flash("error_msg", "Please provide some content");
+        return res.status(400).redirect("/app/users/profile");
     }
 
     const post = await Post.findById(postId);
@@ -78,19 +77,19 @@ const editPost = asyncHandler(async (req, res) => {
     post.content = updatedContent;
     await post.save({ validateBeforeSave: false });
 
-    res.status(201)
-        .redirect("/app/users/profile");
+    req.flash("success_msg", "Post updated successfully");
+    return res.status(201).redirect("/app/users/profile");
 });
 
 // Function to get all posts
 const getAllPosts = async(req, res) => {
     const posts = await Post.find().populate("owner");
     if(!posts){
-        res.status(404);
-        throw new AppError(404, "No posts found");
+        req.flash("error_msg", "No posts found");
+        return res.status(404).redirect("/app/posts/home");
     }
 
-    res.status(201).render("home", { 
+    return res.status(201).render("home", { 
         posts: posts,
         user: req.user
     });
