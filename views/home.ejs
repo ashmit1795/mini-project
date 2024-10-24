@@ -9,13 +9,13 @@
 <body>
     <div class="w-full min-h-screen bg-zinc-900 text-white p-10">
         <% if (success_msg) { %>  <!-- Check if success message exists -->
-            <div class="bg-green-500 text-white px-4 py-2 rounded-md mb-4">
+            <div id="flash-success" class="bg-green-500 text-white px-4 py-2 rounded-md mb-4">
                 <%= success_msg %>  <!-- Display success message -->
             </div>
         <% } %>
         
         <% if (error_msg) { %>  <!-- Check if error message exists -->
-            <div class="bg-red-500 text-white px-4 py-2 rounded-md mb-4">
+            <div id="flash-error" class="bg-red-500 text-white px-4 py-2 rounded-md mb-4">
                 <%= error_msg %>  <!-- Display error message -->
             </div>
         <% } %>
@@ -55,5 +55,17 @@
             </div>
         </div>
     </div>
+    <script>
+        setTimeout(function() {
+            const flashSuccess = document.getElementById('flash-success');
+            const flashError = document.getElementById('flash-error');
+            if(flashSuccess) {
+                flashSuccess.style.display = 'none';
+            }
+            if(flashError) {
+                flashError.style.display = 'none';
+            }
+        }, 3000);  // Hide after 5 seconds (5000 ms), adjust to 10 seconds by changing 5000 to 10000
+    </script>
 </body>
 </html>
