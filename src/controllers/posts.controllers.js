@@ -52,7 +52,7 @@ const toggleLike = asyncHandler(async (req, res) => {
 });
 
 // Function to get a post
-const getPost = async (req, res) => {
+const getPost = asyncHandler(async (req, res) => {
     const { postId } = req.params;
     const post = await Post.findById(postId);
     if(!post){
@@ -60,8 +60,10 @@ const getPost = async (req, res) => {
         throw new AppError(404, "Post not found");
     }
 
-    return post;
-}
+    return res.render("edit", { 
+        post: post 
+    });
+});
 
 // Function to edit a post
 const editPost = asyncHandler(async (req, res) => {
