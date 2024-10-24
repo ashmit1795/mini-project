@@ -8,11 +8,7 @@ const router = Router();
 router.route("/home").get(optionalAuth, getAllPosts);
 router.route("/").post(protect, createPost);
 router.route("/like/:postId").get(protect, toggleLike);
-router.route("/edit/:postId").get(protect, async (req, res) => {
-    res.render("edit", { 
-        post: await getPost(req, res) 
-    });
-}).post(protect, editPost);
+router.route("/edit/:postId").get(protect, getPost).post(protect, editPost);
 
 
 export default router;
