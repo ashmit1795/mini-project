@@ -9,28 +9,30 @@ export const app = express();
 const corsOptions = {
     origin: process.env.CLIENT_URL,
     credentials: true,
-    optionsSuccessStatus: 200
-}
+    optionsSuccessStatus: 200,
+};
 
 // Middlewares
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors(corsOptions));
 
 // Session and flash middleware
-app.use(session({
-    secret: 'your-secret-key',
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-        secure: false,
-        maxAge: 1000 * 60 * 15, // Session expiry (15 minutes)
-    }
-}));
+app.use(
+    session({
+        secret: 'your-secret-key',
+        resave: false,
+        saveUninitialized: true,
+        cookie: {
+            secure: false,
+            maxAge: 1000 * 60 * 15, // Session expiry (15 minutes)
+        },
+    })
+);
 
 // Flash message middleware
-app.use(flash()); 
+app.use(flash());
 
 // Pass flash messages to all views
 app.use((req, res, next) => {
@@ -48,13 +50,13 @@ app.set('view engine', 'ejs');
 
 // Home route
 app.get('/', (req, res) => {
-    res.redirect("/app/posts/home");
+    res.redirect('/app/posts/home');
 });
 
 // Import routes
-import userRouter from "./routes/users.routes.js"
-import postRouter from "./routes/posts.routes.js"
+import userRouter from './routes/users.routes.js';
+import postRouter from './routes/posts.routes.js';
 
 // Use routes
-app.use("/app/users", userRouter);
-app.use("/app/posts", postRouter);
+app.use('/app/users', userRouter);
+app.use('/app/posts', postRouter);

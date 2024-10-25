@@ -1,21 +1,25 @@
-import jwt from "jsonwebtoken";
-import { User } from "../models/users.models.js";
-import AppError from "../utils/AppError.js";
-import AsyncHandler from "../utils/AsyncHandler.js";
+import jwt from 'jsonwebtoken';
+import { User } from '../models/users.models.js';
+import AppError from '../utils/AppError.js';
+import AsyncHandler from '../utils/AsyncHandler.js';
 
 // Function to protect routes
 export const protect = AsyncHandler(async (req, res, next) => {
     try {
-        let token = req.cookies?.accessToken || req.headers["authorization"]?.replace("Bearer ", "");
+        let token =
+            req.cookies?.accessToken ||
+            req.headers['authorization']?.replace('Bearer ', '');
 
-        if(!token){
+        if (!token) {
             res.status(401);
-            throw new AppError(401, "You are Unauthorized");
+            throw new AppError(401, 'You are Unauthorized');
         }
 
         const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-        const user = await User.findById(decodedToken.id).select("-password -refreshToken");
-        if(!user){
+        const user = await User.findById(decodedToken.id).select(
+            '-password -refreshToken'
+        );
+        if (!user) {
             res.redirect(`/app/users/login?redirect=${req.originalUrl}`);
         }
 
@@ -26,5 +30,3 @@ export const protect = AsyncHandler(async (req, res, next) => {
         res.redirect(`/app/users/login?redirect=${req.originalUrl}`);
     }
 });
-
-

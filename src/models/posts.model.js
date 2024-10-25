@@ -1,19 +1,23 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema } from 'mongoose';
 
-
-const postSchema = new Schema({
-    owner: {
-        type: Schema.Types.ObjectId,
-        ref: "User"
+const postSchema = new Schema(
+    {
+        owner: {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+        },
+        likes: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'User',
+            },
+        ],
+        content: {
+            type: String,
+            required: true,
+        },
     },
-    likes: [{
-        type: Schema.Types.ObjectId,
-        ref: "User"
-    }],
-    content: {
-        type: String,
-        required: true
-    },
-}, { timestamps: true });
+    { timestamps: true }
+);
 
 export const Post = mongoose.model('Post', postSchema);
