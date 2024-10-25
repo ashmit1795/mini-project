@@ -46,6 +46,11 @@ app.use(express.static('public'));
 // View engine
 app.set('view engine', 'ejs');
 
+// Home route
+app.get('/', (req, res) => {
+    res.redirect("/app/posts/home");
+});
+
 // Import routes
 import userRouter from "./routes/users.routes.js"
 import postRouter from "./routes/posts.routes.js"
