@@ -66,6 +66,7 @@ SESSION_SECRET=your_session_secret
 npm run dev
 ```
 The server will run on http://localhost:3000/
+
 ## Lessons Learned
 
 Throughout the development of this project, I have gained valuable knowledge and skills, including:
